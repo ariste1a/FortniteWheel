@@ -81,7 +81,7 @@ function drawSegmentLabel(canvas, context, degrees, index) {
     context.restore();
  }
 
- var spinDegree = 90;//Math.floor(Math.random() * 359);
+ var spinDegree = Math.floor(Math.random() * 359);
  console.log(spinDegree)
  console.log(segments);
  
