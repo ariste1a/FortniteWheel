@@ -48,8 +48,7 @@ for(var i = 0; i < segments.length; i++)
     ctx.fillStyle = colors[i % colors.length]; 
     var startAngle = currentDegree; 
     var endAngle = currentDegree + (360 / segmentsLength); 
-    currentDegree = endAngle; 
-    console.log(i); 
+    currentDegree = endAngle;     
     var startAngleRad = degreesToRadians(startAngle); 
     var endAngleRad = degreesToRadians(endAngle); 
     ctx.beginPath(); 
@@ -58,6 +57,8 @@ for(var i = 0; i < segments.length; i++)
     ctx.closePath();             
     ctx.fill();             
     drawSegmentLabel(c, ctx, ((endAngle - startAngle) / 2) + startAngle, i);     
+    segments[i].startAngle = startAngle; 
+    segments[i].endAngle = endAngle; 
 }
 
 function drawSegmentLabel(canvas, context, degrees, index) {        
@@ -75,10 +76,33 @@ function drawSegmentLabel(canvas, context, degrees, index) {
     context.textBaseline = 'middle';
     var fontSize = Math.floor(canvas.height / 30);
     context.font = fontSize + "pt Helvetica";    
-    context.fillText(segments[index].text, 130, 0)
+    context.fillText(segments[index].text, 150, 0)
     context.translate(-x,-y);
     context.restore();
  }
 
- var spinDegree = Math.floor(Math.random() * 359);
- TweenMax.to("#canvas", 1, {rotation:spinDegree, ease:Linear.easeNone, repeat:0});  
+ var spinDegree = 90;//Math.floor(Math.random() * 359);
+ console.log(spinDegree)
+ console.log(segments);
+ 
+ TweenMax.to("#canvas", 0.1, {rotation: spinDegree, ease:Linear.easeNone, repeat:0, onComplete: function(){     
+    var relativeAngle = Math.floor(270 - spinDegree);
+    if (relativeAngle < 0)
+    {
+        relativeAngle = 360 - Math.abs(relativeAngle);
+    }
+    for(var i = 0; i < segments.length; i++)
+    {
+        if(relativeAngle >= segments[i].startAngle && relativeAngle <= segments[i].endAngle)
+        {
+        document.getElementById("result").innerHTML = segments[i].text;             
+        // ctx.fillStyle = "#000000";
+        // ctx.beginPath(); 
+        // ctx.moveTo(250, 250);     
+        // ctx.arc(250, 250, 200, startAngleRad, endAngleRad, false); 
+        // ctx.closePath();             
+        // ctx.fill();             
+        return;
+        }
+    }     
+ }});  
